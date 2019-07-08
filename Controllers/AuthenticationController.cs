@@ -10,12 +10,5 @@ namespace ExpensesManaging.Controllers {
         {
 
         }
-
-        [AllowAnonymous]
-        [HttpPost("authenticate")]
-        public IActionResult Authenticate()
-        {
-            
-        }
     }
 }
