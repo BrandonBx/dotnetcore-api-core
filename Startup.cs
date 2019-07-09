@@ -1,4 +1,5 @@
-﻿using ExpensesManagingApi.Models;
+﻿using System.Net;
+using ExpensesManagingApi.Models;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,10 +7,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using ExpensesManaging.POCO;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using ExpensesManaging.POCO;
+using ExpensesManaging.Shared.Interfaces;
+using ExpensesManaging.project.Services;
 
 namespace ExpensesManagingApi
 {
@@ -52,20 +55,22 @@ namespace ExpensesManagingApi
                 };
             });
 
-            var ValidationParameters = new TokenValidationParameters
+            services.AddScoped<IAuthenticateService, TokenAuthenticationService>();
+            services.AddScoped<IUserManagementService, UserManagementService>();
+            /* var ValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(secret),
                 ValidateIssuer = false,
                 ValidateAudience = false
-            };
+            }; */
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "My API",
+                    Title = "dotnetcore-api-core",
                     Version = "v1"
                 });
             });
@@ -86,12 +91,17 @@ namespace ExpensesManagingApi
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
+            // Security JWT
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            app.UseAuthentication();
+            app.UseHttpsRedirection();
+            // app.UseMvc() -> Do we have to add this?
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "dotnetcore-api-core V1");
                 app.UseHttpsRedirection();
                 app.UseMvc();
             });
