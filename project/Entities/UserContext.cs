@@ -13,4 +13,4 @@ namespace ExpensesManaging.project.Entities
             base.OnModelCreating(modelBuilder);
         }
     }
-}
+} 
