@@ -40,7 +40,7 @@ namespace ExpensesManaging.project.Services
                 signingCredentials: credentials
             );
             token = new JwtSecurityTokenHandler().WriteToken(jwtToken);
-            return token;
+            return true;
         }
     }
 }
