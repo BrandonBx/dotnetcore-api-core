@@ -13,6 +13,7 @@ using System.Text;
 using ExpensesManaging.POCO;
 using ExpensesManaging.Shared.Interfaces;
 using ExpensesManaging.project.Services;
+using ExpensesManaging.project.Entities;
 
 namespace ExpensesManagingApi
 {
@@ -28,9 +29,14 @@ namespace ExpensesManagingApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            /***** EF Core connection *****/
+            // Example that can be deleted
             services.AddDbContext<ExampleContext>(opt =>
                 opt.UseInMemoryDatabase("ExampleList"));
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            // Database injection
+            services.AddDbContext<UserContext>(options => 
+                options.UseMySQL(Configuration.GetConnectionString("AppDatabase")));
 
             // Token configuration
             services.Configure<TokenManagement>(Configuration.GetSection("tokenManagement"));
@@ -67,6 +73,7 @@ namespace ExpensesManagingApi
                     Version = "v1"
                 });
             });
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
