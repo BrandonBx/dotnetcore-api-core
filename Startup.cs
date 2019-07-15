@@ -14,6 +14,7 @@ using ExpensesManaging.POCO;
 using ExpensesManaging.Shared.Interfaces;
 using ExpensesManaging.project.Services;
 using ExpensesManaging.project.Entities;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 
 namespace ExpensesManagingApi
 {
@@ -36,7 +37,7 @@ namespace ExpensesManagingApi
 
             // Database injection
             services.AddDbContext<UserContext>(options => 
-                options.UseMySQL(Configuration.GetConnectionString("AppDatabase")));
+                options.UseMySql(Configuration.GetConnectionString("AppDatabase")));
 
             // Token configuration
             services.Configure<TokenManagement>(Configuration.GetSection("tokenManagement"));
