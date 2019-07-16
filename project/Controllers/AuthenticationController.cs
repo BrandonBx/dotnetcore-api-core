@@ -1,3 +1,6 @@
+using System;
+using System.Security.Cryptography;
+using System.Linq;
 using System.Threading.Tasks;
 using ExpensesManaging.POCO;
 using ExpensesManaging.project.Entities;
@@ -5,6 +8,7 @@ using ExpensesManaging.project.POCO;
 using ExpensesManaging.Shared.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace ExpensesManaging.Controllers
 {
@@ -49,6 +53,21 @@ namespace ExpensesManaging.Controllers
         [HttpPost, Route("register")]
         public async Task<ActionResult<User>> register(User user)
         {
+            // Use a service for these things please
+            byte[] salt = new byte[128/8];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(salt);
+            }
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: user.Password,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 10000,
+                numBytesRequested: 256/8
+            ));
+
+            user.Password = hashed;
             _userContext.Users.Add(user);
             await _userContext.SaveChangesAsync();
             return CreatedAtAction (nameof (login), new { id = user.Id }, user); // TODO : Adapt the result please
