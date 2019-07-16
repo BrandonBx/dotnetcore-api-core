@@ -46,10 +46,12 @@ namespace ExpensesManaging.Controllers
             return null;
         }
         [AllowAnonymous]
-        [HttpPost, Route("login")]
+        [HttpPost, Route("register")]
         public async Task<ActionResult<User>> register(User user)
         {
-            return null;
+            _userContext.Users.Add(user);
+            await _userContext.SaveChangesAsync();
+            return CreatedAtAction (nameof (login), new { id = user.Id }, user); // TODO : Adapt the result please
         }
     }
 }
