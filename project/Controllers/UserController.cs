@@ -1,6 +1,8 @@
+using System.Linq;
 using System.Threading.Tasks;
 using ExpensesManaging.project.Entities;
 using ExpensesManaging.project.POCO;
+using ExpensesManaging.project.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,16 +13,17 @@ namespace ExpensesManaging.project.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly UserContext _context;
+        private readonly UserContext _userContext;
 
-        public UserController (UserContext context) {
-            _context = context;
+        public UserController(UserContext userContext)
+        {
+            _userContext = userContext;   
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<User>> GetUser(long id)
         {
-            User user = await _context.Users.FindAsync(id);
+            User user = await _userContext.Users.FindAsync(id);
             if(user == null)
             {
                 return null; // TODO : Return NotFound
@@ -30,8 +33,8 @@ namespace ExpensesManaging.project.Controllers
         [HttpPost]
         public async Task<ActionResult<User>> PostUser (User user)
         {
-            _context.Users.Add(user);
-            await _context.SaveChangesAsync();
+            _userContext.Users.Add(user);
+            await _userContext.SaveChangesAsync();
 
             return CreatedAtAction (nameof (GetUser), new { id = user.Id }, user);
         }

@@ -11,10 +11,10 @@ namespace ExpensesManaging.project.Services
 {
     public class TokenAuthenticationService : IAuthenticateService
     {
-        private readonly IUserManagementService _userManagementService;
+        private readonly IUserService _userManagementService;
         private readonly TokenManagement _tokenManagement;
 
-        public TokenAuthenticationService(IUserManagementService userManagementService, IOptions<TokenManagement> tokenManagement)
+        public TokenAuthenticationService(IUserService userManagementService, IOptions<TokenManagement> tokenManagement)
         {
             _userManagementService = userManagementService;
             _tokenManagement = tokenManagement.Value;

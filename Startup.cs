@@ -30,15 +30,7 @@ namespace ExpensesManagingApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            /***** EF Core connection *****/
-            // Example that can be deleted
-            services.AddDbContext<ExampleContext>(opt =>
-                opt.UseInMemoryDatabase("ExampleList"));
-
-            // Database injection
-            services.AddDbContext<UserContext>(options => 
-                options.UseMySql(Configuration.GetConnectionString("AppDatabase")));
-
+            ConfigureContext(services);
             // Token configuration
             services.Configure<TokenManagement>(Configuration.GetSection("tokenManagement"));
             var token = Configuration.GetSection("tokenManagement").Get<TokenManagement>();
@@ -63,7 +55,7 @@ namespace ExpensesManagingApi
             });
 
             services.AddScoped<IAuthenticateService, TokenAuthenticationService>();
-            services.AddScoped<IUserManagementService, UserManagementService>();
+            services.AddScoped<IUserService, UserManagementService>();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -106,6 +98,18 @@ namespace ExpensesManagingApi
                 app.UseHttpsRedirection();
                 app.UseMvc();
             });
+        }
+
+        public void ConfigureContext(IServiceCollection services)
+        {
+            // Database injection
+            services.AddDbContext<UserContext>(options =>
+                options.UseMySql(Configuration.GetConnectionString("AppDatabase")));
+
+            // Example that can be deleted
+            services.AddDbContext<ExampleContext>(opt =>
+                opt.UseInMemoryDatabase("ExampleList"));
+
         }
     }
 }

@@ -9,6 +9,7 @@ using ExpensesManaging.Shared.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExpensesManaging.Controllers
 {
@@ -47,6 +48,7 @@ namespace ExpensesManaging.Controllers
         [HttpGet("{email, password}"), Route("login")]
         public async Task<ActionResult<User>> login(string email, string password)
         {
+            User user = await _userContext.Users.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
             return null;
         }
         [AllowAnonymous]
