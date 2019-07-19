@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using ExpensesManaging.project.Contexts;
 using ExpensesManaging.project.Exceptions;
 using ExpensesManaging.project.Models;
@@ -28,7 +29,7 @@ namespace ExpensesManaging.project.Services
                 return null;
 
             // check if password is correct
-            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
+            if (!VerifyPasswordHash(password, Encoding.ASCII.GetBytes(user.Password), user.PasswordSalt))
                 return null;
 
             // authentication successful
@@ -45,19 +46,19 @@ namespace ExpensesManaging.project.Services
             return _userContext.Users.Find(id);
         }
 
-        public User Create(User user, string password)
+        public User Create(User user)
         {
             // validation
-            if (string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(user.Password))
                 throw new AppException("Password is required");
 
             if (_userContext.Users.Any(x => x.Username == user.Username))
                 throw new AppException("Username \"" + user.Username + "\" is already taken");
 
             byte[] passwordHash, passwordSalt;
-            CreatePasswordHash(password, out passwordHash, out passwordSalt);
+            CreatePasswordHash(user.Password, out passwordHash, out passwordSalt);
 
-            user.PasswordHash = passwordHash;
+            user.Password = Convert.ToBase64String(passwordHash);
             user.PasswordSalt = passwordSalt;
 
             _userContext.Users.Add(user);
@@ -88,10 +89,10 @@ namespace ExpensesManaging.project.Services
             // update password if it was entered
             if (!string.IsNullOrWhiteSpace(password))
             {
-                byte[] passwordHash, passwordSalt;
-                CreatePasswordHash(password, out passwordHash, out passwordSalt);
+                byte[] passwordHashed, passwordSalt;
+                CreatePasswordHash(password, out passwordHashed, out passwordSalt);
 
-                user.PasswordHash = passwordHash;
+                user.Password = Convert.ToBase64String(passwordHashed);
                 user.PasswordSalt = passwordSalt;
             }
 

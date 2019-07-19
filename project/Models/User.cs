@@ -16,8 +16,8 @@ namespace ExpensesManaging.project.Models
         [Required]
         [NotMapped]
         public string Password { get; set; }
-        public string PasswordHash { get; set; }
-        public string PasswordSalt { get; set; }
+        [NotMapped]
+        public byte[] PasswordSalt { get; set; }
         [Required]
         public string Email { get; set; }
         public DateTime BirthdayDate { get; set; }

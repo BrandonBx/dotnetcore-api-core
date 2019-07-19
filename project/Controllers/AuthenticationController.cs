@@ -1,4 +1,5 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using ExpensesManaging.Config;
@@ -9,6 +10,8 @@ using ExpensesManaging.project.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+
 
 namespace ExpensesManaging.Controllers
 {
@@ -27,20 +30,20 @@ namespace ExpensesManaging.Controllers
         {
             _userContext = userContext;
             _userService = userService;
-            _appSettings = appSetting.value;
+            _appSettings = appSettings.Value;
 
         }
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult<User> Login(User user)
+        public IActionResult Login(User user)
         {
             User _user = _userService.Authenticate(user.Username, user.Password);
             if(_user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
 
-            var tokenHandler = new JwtSecurityTokenHandle();
-            var key = Encoding.ASCII.GetBytes(_appSetting.Secret);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[] 
