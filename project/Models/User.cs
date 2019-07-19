@@ -15,7 +15,6 @@ namespace ExpensesManaging.project.Models
         [Required]
         public string Username { get; set; }
         [Required]
-        [JsonIgnore]
         public string Password { get; set; }
         [JsonIgnore]
         public byte[] PasswordSalt { get; set; }
