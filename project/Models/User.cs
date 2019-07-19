@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace ExpensesManaging.project.Models
 {
@@ -14,9 +15,9 @@ namespace ExpensesManaging.project.Models
         [Required]
         public string Username { get; set; }
         [Required]
-        [NotMapped]
+        [JsonIgnore]
         public string Password { get; set; }
-        [NotMapped]
+        [JsonIgnore]
         public byte[] PasswordSalt { get; set; }
         [Required]
         public string Email { get; set; }
