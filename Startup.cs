@@ -1,22 +1,11 @@
-﻿using System.Net;
-using ExpensesManagingApi.Models;
-using Microsoft.OpenApi.Models;
+﻿using ExpensesManaging.project.Contexts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using ExpensesManaging.POCO;
-using ExpensesManaging.Shared.Interfaces;
-using ExpensesManaging.project.Services;
-using ExpensesManaging.project.Entities;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
-using Microsoft.AspNetCore.Identity;
-using System;
+using Microsoft.OpenApi.Models;
 
 namespace ExpensesManagingApi
 {

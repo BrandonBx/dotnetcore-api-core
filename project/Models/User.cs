@@ -1,7 +1,8 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ExpensesManaging.project.POCO
+namespace ExpensesManaging.project.Models
 {
     public class User
     {
@@ -13,7 +14,10 @@ namespace ExpensesManaging.project.POCO
         [Required]
         public string Username { get; set; }
         [Required]
+        [NotMapped]
         public string Password { get; set; }
+        public string PasswordHash { get; set; }
+        public string PasswordSalt { get; set; }
         [Required]
         public string Email { get; set; }
         public DateTime BirthdayDate { get; set; }

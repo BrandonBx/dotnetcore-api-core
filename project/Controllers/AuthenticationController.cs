@@ -1,18 +1,14 @@
-using System.Text;
-using System.Diagnostics;
-using System.Reflection.Metadata;
 using System;
-using System.Security.Cryptography;
-using System.Linq;
-using System.Threading.Tasks;
-using ExpensesManaging.POCO;
-using ExpensesManaging.project.Entities;
-using ExpensesManaging.project.POCO;
-using ExpensesManaging.Shared.Interfaces;
+using System.Security.Claims;
+using System.Text;
+using ExpensesManaging.Config;
+using ExpensesManaging.project.Contexts;
+using ExpensesManaging.project.Exceptions;
+using ExpensesManaging.project.Models;
+using ExpensesManaging.project.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace ExpensesManaging.Controllers
 {
@@ -20,12 +16,12 @@ namespace ExpensesManaging.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IUserService _userService;
+        private readonly UserService _userService;
         private readonly UserContext _userContext;
         private readonly AppSettings _appSettings;
 
         public AuthenticationController(
-            IUserService userService, 
+            UserService userService, 
             UserContext userContext,
             IOptions<AppSettings> appSettings)
         {
@@ -39,7 +35,7 @@ namespace ExpensesManaging.Controllers
         [HttpPost("login")]
         public IActionResult<User> Login(User user)
         {
-            User _user = _userService.Authenticate(user.Username, user.Password)
+            User _user = _userService.Authenticate(user.Username, user.Password);
             if(_user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
 

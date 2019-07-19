@@ -1,7 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
-using ExpensesManaging.project.Entities;
-using ExpensesManaging.project.POCO;
+using ExpensesManaging.project.Contexts;
+using ExpensesManaging.project.Models;
 using ExpensesManaging.project.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
