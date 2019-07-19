@@ -33,53 +33,6 @@ namespace ExpensesManagingApi
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureContext(services);
-            // Identity configuration
-            services.Configure<IdentityOptions>(options =>
-            {
-                // Password settings.
-                options.Password.RequireDigit = false;
-                options.Password.RequireLowercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireUppercase = false;
-                options.Password.RequiredLength = 8;
-                options.Password.RequiredUniqueChars = 0;
-
-                // Lockout settings.
-                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-                options.Lockout.MaxFailedAccessAttempts = 5;
-                options.Lockout.AllowedForNewUsers = true;
-
-                // User settings.
-                options.User.AllowedUserNameCharacters =
-                "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-                options.User.RequireUniqueEmail = false;
-            });
-
-            // Token configuration
-            services.Configure<TokenManagement>(Configuration.GetSection("tokenManagement"));
-            var token = Configuration.GetSection("tokenManagement").Get<TokenManagement>();
-            var secret = Encoding.ASCII.GetBytes(token.Secret);
-            services.AddAuthentication(x =>
-            {
-                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(x =>
-            {
-                x.RequireHttpsMetadata = false;
-                x.SaveToken = true;
-                x.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(token.Secret)),
-                    ValidIssuer = token.Issuer,
-                    ValidAudience = token.Audience,
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
-
-            services.AddScoped<IAuthenticateService, TokenAuthenticationService>();
-            services.AddScoped<IUserService, UserManagementService>();
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             services.AddSwaggerGen(c =>
@@ -110,18 +63,17 @@ namespace ExpensesManagingApi
             app.UseSwagger();
             // Security JWT
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-            app.UseAuthentication();
-            app.UseHttpsRedirection();
-            // app.UseMvc() -> Do we have to add this?
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
             // specifying the Swagger JSON endpoint.
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "dotnetcore-api-core V1");
-                app.UseHttpsRedirection();
-                app.UseMvc();
             });
+            app.UseAuthentication();
+            app.UseStaticFiles();
+            app.UseHttpsRedirection();
+            app.UseMvc();
         }
 
         public void ConfigureContext(IServiceCollection services)
@@ -129,11 +81,6 @@ namespace ExpensesManagingApi
             // Database injection
             services.AddDbContext<UserContext>(options =>
                 options.UseMySql(Configuration.GetConnectionString("AppDatabase")));
-
-            // Example that can be deleted
-            services.AddDbContext<ExampleContext>(opt =>
-                opt.UseInMemoryDatabase("ExampleList"));
-
         }
     }
 }

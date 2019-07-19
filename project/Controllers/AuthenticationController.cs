@@ -1,3 +1,6 @@
+using System.Text;
+using System.Diagnostics;
+using System.Reflection.Metadata;
 using System;
 using System.Security.Cryptography;
 using System.Linq;
@@ -17,62 +20,66 @@ namespace ExpensesManaging.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IAuthenticateService _authenticateService;
+        private readonly IUserService _userService;
         private readonly UserContext _userContext;
+        private readonly AppSettings _appSettings;
 
-        public AuthenticationController(IAuthenticateService authenticateService, UserContext userContext)
+        public AuthenticationController(
+            IUserService userService, 
+            UserContext userContext,
+            IOptions<AppSettings> appSettings)
         {
             _userContext = userContext;
-            _authenticateService = authenticateService;
+            _userService = userService;
+            _appSettings = appSetting.value;
 
         }
 
         [AllowAnonymous]
-        [HttpPost, Route("request")]
-        public IActionResult RequestToken([FromBody] TokenRequest request)
+        [HttpPost("login")]
+        public IActionResult<User> Login(User user)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            User _user = _userService.Authenticate(user.Username, user.Password)
+            if(_user == null)
+                return BadRequest(new { message = "Username or password is incorrect" });
 
-            string token;
-            if (_authenticateService.IsAuthenticated(request, out token))
+            var tokenHandler = new JwtSecurityTokenHandle();
+            var key = Encoding.ASCII.GetBytes(_appSetting.Secret);
+            var tokenDescriptor = new SecurityTokenDescriptor
             {
+                Subject = new ClaimsIdentity(new Claim[] 
+                {
+                    new Claim(ClaimTypes.Name, _user.Id.ToString())
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            var tokenString = tokenHandler.WriteToken(token);
+
+            return Ok(new {
+                Id = _user.Id,
+                Username = _user.Username,
+                FirstName = _user.FirstName,
+                LastName = _user.LastName,
+                Token = tokenString
+            });
+        }
+
+        [AllowAnonymous]
+        [HttpPost("register")]
+        public ActionResult<User> Register(User user)
+        {
+            try {
+                _userService.Create(user);
                 return Ok();
             }
-
-            return BadRequest("Invalid request");
-        }
-        [AllowAnonymous]
-        [HttpGet("{email, password}"), Route("login")]
-        public async Task<ActionResult<User>> login(string email, string password)
-        {
-            User user = await _userContext.Users.FirstOrDefaultAsync(u => u.Email == email && u.Password == password);
-            return null;
-        }
-        [AllowAnonymous]
-        [HttpPost, Route("register")]
-        public async Task<ActionResult<User>> register(User user)
-        {
-            // Use a service for these things please
-            byte[] salt = new byte[128/8];
-            using (var rng = RandomNumberGenerator.Create())
+            catch(AppException ex)
             {
-                rng.GetBytes(salt);
+                // return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
             }
-            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
-                password: user.Password,
-                salt: salt,
-                prf: KeyDerivationPrf.HMACSHA256,
-                iterationCount: 10000,
-                numBytesRequested: 256/8
-            ));
-
-            user.Password = hashed;
-            _userContext.Users.Add(user);
-            await _userContext.SaveChangesAsync();
-            return CreatedAtAction (nameof (login), new { id = user.Id }, user); // TODO : Adapt the result please
         }
     }
 }
