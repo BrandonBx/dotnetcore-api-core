@@ -1,5 +1,6 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Formatting;
 using System.Security.Claims;
 using System.Text;
 using ExpensesManaging.Config;
@@ -36,7 +37,7 @@ namespace ExpensesManaging.Controllers
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Login(User user)
+        public IActionResult Login(Login user)
         {
             User _user = _userService.Authenticate(user.Username, user.Password);
             if(_user == null)
@@ -57,13 +58,7 @@ namespace ExpensesManaging.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            return Ok(new {
-                Id = _user.Id,
-                Username = _user.Username,
-                FirstName = _user.FirstName,
-                LastName = _user.LastName,
-                Token = tokenString
-            });
+            return Ok();
         }
 
         [AllowAnonymous]

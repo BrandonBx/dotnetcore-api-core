@@ -1,4 +1,5 @@
 ﻿using ExpensesManaging.project.Contexts;
+using ExpensesManaging.project.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -32,6 +33,7 @@ namespace ExpensesManagingApi
                     Version = "v1"
                 });
             });
+            services.AddScoped<UserService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
