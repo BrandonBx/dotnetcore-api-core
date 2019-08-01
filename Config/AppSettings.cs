@@ -1,4 +1,4 @@
-namespace ExpensesManaging.Config
+namespace DotnetCore.Config
 {
     public class AppSettings
     {

@@ -3,18 +3,18 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Formatting;
 using System.Security.Claims;
 using System.Text;
-using ExpensesManaging.Config;
-using ExpensesManaging.project.Contexts;
-using ExpensesManaging.project.Exceptions;
-using ExpensesManaging.project.Models;
-using ExpensesManaging.project.Services;
+using DotnetCore.Config;
+using DotnetCore.project.Contexts;
+using DotnetCore.project.Exceptions;
+using DotnetCore.project.Models;
+using DotnetCore.project.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 
-namespace ExpensesManaging.Controllers
+namespace DotnetCore.Controllers
 {
     [Route("authentication")]
     [ApiController]

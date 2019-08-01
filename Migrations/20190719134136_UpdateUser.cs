@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ExpensesManagingApi.Migrations
+namespace DotnetCoreApi.Migrations
 {
     public partial class UpdateUser : Migration
     {

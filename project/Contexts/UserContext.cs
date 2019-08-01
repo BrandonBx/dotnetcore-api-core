@@ -1,7 +1,7 @@
-using ExpensesManaging.project.Models;
+using DotnetCore.project.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ExpensesManaging.project.Contexts
+namespace DotnetCore.project.Contexts
 {
     public class UserContext : DbContext
     {

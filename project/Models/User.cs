@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 
-namespace ExpensesManaging.project.Models
+namespace DotnetCore.project.Models
 {
     public class User
     {

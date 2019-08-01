@@ -1,4 +1,4 @@
-namespace ExpensesManaging.project.Models
+namespace DotnetCore.project.Models
 {
     public class Login
     {

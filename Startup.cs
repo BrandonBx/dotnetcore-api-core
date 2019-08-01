@@ -1,6 +1,6 @@
 ﻿using System.Text;
-using ExpensesManaging.project.Contexts;
-using ExpensesManaging.project.Services;
+using DotnetCore.project.Contexts;
+using DotnetCore.project.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,7 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
-namespace ExpensesManagingApi
+namespace DotnetCoreApi
 {
     public class Startup
     {

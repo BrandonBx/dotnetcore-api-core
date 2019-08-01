@@ -2,11 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using ExpensesManaging.project.Contexts;
-using ExpensesManaging.project.Exceptions;
-using ExpensesManaging.project.Models;
+using DotnetCore.project.Contexts;
+using DotnetCore.project.Exceptions;
+using DotnetCore.project.Models;
 
-namespace ExpensesManaging.project.Services
+namespace DotnetCore.project.Services
 {
     public class UserService
     {

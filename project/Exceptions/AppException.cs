@@ -1,6 +1,6 @@
 using System;
 
-namespace ExpensesManaging.project.Exceptions
+namespace DotnetCore.project.Exceptions
 {
     public class AppException : Exception
     {

@@ -1,12 +1,12 @@
 using System.Linq;
 using System.Threading.Tasks;
-using ExpensesManaging.project.Contexts;
-using ExpensesManaging.project.Models;
-using ExpensesManaging.project.Services;
+using DotnetCore.project.Contexts;
+using DotnetCore.project.Models;
+using DotnetCore.project.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ExpensesManaging.project.Controllers
+namespace DotnetCore.project.Controllers
 {
     [Authorize]
     [Route("api/users")]
