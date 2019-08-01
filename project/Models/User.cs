@@ -14,8 +14,7 @@ namespace DotnetCore.project.Models
         public string FirstName { get; set; }
         [Required]
         public string Username { get; set; }
-        [Required]
-        public string Password { get; set; }
+        public byte[] Password { get; set; }
         [JsonIgnore]
         public byte[] PasswordSalt { get; set; }
         [Required]

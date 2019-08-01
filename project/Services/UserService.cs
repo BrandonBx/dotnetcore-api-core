@@ -5,10 +5,11 @@ using System.Text;
 using DotnetCore.project.Contexts;
 using DotnetCore.project.Exceptions;
 using DotnetCore.project.Models;
+using DotnetCore.project.Services.Interfaces;
 
 namespace DotnetCore.project.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly UserContext _userContext;
 
@@ -29,7 +30,7 @@ namespace DotnetCore.project.Services
                 return null;
 
             // check if password is correct
-            if (!VerifyPasswordHash(password, Encoding.ASCII.GetBytes(user.Password), user.PasswordSalt))
+            if (!VerifyPasswordHash(password, user.Password, user.PasswordSalt))
                 return null;
 
             // authentication successful
@@ -46,19 +47,19 @@ namespace DotnetCore.project.Services
             return _userContext.Users.Find(id);
         }
 
-        public User Create(User user)
+        public User Create(User user, string password)
         {
             // validation
-            if (string.IsNullOrWhiteSpace(user.Password))
+            if (string.IsNullOrWhiteSpace(password))
                 throw new AppException("Password is required");
 
             if (_userContext.Users.Any(x => x.Username == user.Username))
                 throw new AppException("Username \"" + user.Username + "\" is already taken");
 
             byte[] passwordHash, passwordSalt;
-            CreatePasswordHash(user.Password, out passwordHash, out passwordSalt);
+            CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-            user.Password = Convert.ToBase64String(passwordHash);
+            user.Password = passwordHash;
             user.PasswordSalt = passwordSalt;
 
             _userContext.Users.Add(user);
@@ -92,7 +93,7 @@ namespace DotnetCore.project.Services
                 byte[] passwordHashed, passwordSalt;
                 CreatePasswordHash(password, out passwordHashed, out passwordSalt);
 
-                user.Password = Convert.ToBase64String(passwordHashed);
+                user.Password = passwordHashed;
                 user.PasswordSalt = passwordSalt;
             }
 

@@ -3,11 +3,14 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Formatting;
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 using DotnetCore.Config;
 using DotnetCore.project.Contexts;
+using DotnetCore.project.DTOs;
 using DotnetCore.project.Exceptions;
 using DotnetCore.project.Models;
 using DotnetCore.project.Services;
+using DotnetCore.project.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -20,26 +23,24 @@ namespace DotnetCore.Controllers
     [ApiController]
     public class AuthenticationController : ControllerBase
     {
-        private readonly UserService _userService;
-        private readonly UserContext _userContext;
+        private readonly IUserService _userService;
+        private IMapper _mapper;
         private readonly AppSettings _appSettings;
-
         public AuthenticationController(
-            UserService userService, 
-            UserContext userContext,
+            IUserService userService,
+            IMapper mapper,
             IOptions<AppSettings> appSettings)
         {
-            _userContext = userContext;
             _userService = userService;
+            _mapper = mapper;
             _appSettings = appSettings.Value;
-
         }
 
         [AllowAnonymous]
         [HttpPost("login")]
-        public IActionResult Login(Login user)
+        public IActionResult Login(UserDto userDto)
         {
-            User _user = _userService.Authenticate(user.Username, user.Password);
+            User _user = _userService.Authenticate(userDto.Username, userDto.Password);
             if(_user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
 
@@ -63,12 +64,17 @@ namespace DotnetCore.Controllers
 
         [AllowAnonymous]
         [HttpPost("register")]
-        public ActionResult<User> Register(User user)
+        public IActionResult Register([FromBody]UserDto userDto)
         {
-            try {
-                _userService.Create(user);
+            // map dto to entity
+            var user = _mapper.Map<User>(userDto);
+
+            try 
+            {
+                // save 
+                _userService.Create(user, userDto.Password);
                 return Ok();
-            }
+            } 
             catch(AppException ex)
             {
                 // return error message if there was an exception
