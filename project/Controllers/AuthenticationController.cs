@@ -59,7 +59,7 @@ namespace DotnetCore.Controllers
             var token = tokenHandler.CreateToken(tokenDescriptor);
             var tokenString = tokenHandler.WriteToken(token);
 
-            return Ok();
+            return Ok(tokenString);
         }
 
         [AllowAnonymous]

@@ -32,7 +32,7 @@ namespace DotnetCoreApi
             ConfigureContext(services);
             
             services.AddCors();
-            services.AddAutoMapper();
+            services.AddAutoMapper(typeof(Startup));
 
             // configure strongly typed settings objects
             var appSettingsSection = Configuration.GetSection("AppSettings");
@@ -83,7 +83,7 @@ namespace DotnetCoreApi
                     Version = "v1"
                 });
             });
-            services.AddScoped<UserService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 

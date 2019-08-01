@@ -30,7 +30,7 @@ namespace DotnetCore.project.Services
                 return null;
 
             // check if password is correct
-            if (!VerifyPasswordHash(password, user.Password, user.PasswordSalt))
+            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
                 return null;
 
             // authentication successful
@@ -59,7 +59,7 @@ namespace DotnetCore.project.Services
             byte[] passwordHash, passwordSalt;
             CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-            user.Password = passwordHash;
+            user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
             _userContext.Users.Add(user);
@@ -93,7 +93,7 @@ namespace DotnetCore.project.Services
                 byte[] passwordHashed, passwordSalt;
                 CreatePasswordHash(password, out passwordHashed, out passwordSalt);
 
-                user.Password = passwordHashed;
+                user.PasswordHash = passwordHashed;
                 user.PasswordSalt = passwordSalt;
             }
 
