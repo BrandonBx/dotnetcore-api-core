@@ -1,15 +1,12 @@
 using System;
 using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http.Formatting;
 using System.Security.Claims;
 using System.Text;
 using AutoMapper;
 using DotnetCore.Config;
-using DotnetCore.project.Contexts;
 using DotnetCore.project.DTOs;
 using DotnetCore.project.Exceptions;
 using DotnetCore.project.Models;
-using DotnetCore.project.Services;
 using DotnetCore.project.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
