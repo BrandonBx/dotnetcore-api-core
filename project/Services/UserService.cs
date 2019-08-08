@@ -7,6 +7,7 @@ using DotnetCore.project.Contexts;
 using DotnetCore.project.Exceptions;
 using DotnetCore.project.Models;
 using DotnetCore.project.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DotnetCore.project.Services
 {
@@ -38,17 +39,17 @@ namespace DotnetCore.project.Services
             return user;
         }
 
-        public IEnumerable<User> GetAll()
+        public async Task<IEnumerable<User>> GetAll()
         {
-            return _userContext.Users;
+            return await _userContext.Users.ToListAsync();
         }
 
-        public User GetById(int id)
+        public async Task<User> GetById(int id)
         {
-            return _userContext.Users.Find(id);
+            return await _userContext.Users.FindAsync(id);
         }
 
-        public User Create(User user, string password)
+        public async Task<User> Create(User user, string password)
         {
             // validation
             if (string.IsNullOrWhiteSpace(password))
@@ -63,8 +64,8 @@ namespace DotnetCore.project.Services
             user.PasswordHash = passwordHash;
             user.PasswordSalt = passwordSalt;
 
-            _userContext.Users.Add(user);
-            _userContext.SaveChanges();
+            await _userContext.Users.AddAsync(user);
+            await _userContext.SaveChangesAsync();
 
             return user;
         }

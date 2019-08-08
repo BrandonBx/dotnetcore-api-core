@@ -23,14 +23,15 @@ namespace DotnetCore.project.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<User>> GetUsers()
+        public async  Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            IEnumerable<User> users = _userService.GetAll();
+            IEnumerable<User> users = await _userService.GetAll();
             
             if(users == null)
             {
-                return null; // Return NotFound
+                return NotFound();
             }
+
             return Ok(users);
         }
 
