@@ -8,9 +8,9 @@ namespace DotnetCore.project.Services.Interfaces
     {
         User Authenticate(string username, string password);
         Task<IEnumerable<User>> GetAll();
-        Task<User> GetById(int id);
+        Task<User> GetById(long id);
         Task<User> Create(User user, string password);
-        void Update(User user, string password = null);
+        Task<User> Update(User user, string password = null);
         void Delete(int id);
     }
 }

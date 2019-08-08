@@ -35,23 +35,27 @@ namespace DotnetCore.project.Controllers
             return Ok(users);
         }
 
-        // [HttpGet("{id}")]
-        // public async Task<ActionResult<User>> GetUser(long id)
-        // {
-        //     User user = await _userService.Users.FindAsync(id);
-        //     if(user == null)
-        //     {
-        //         return null; // TODO : Return NotFound
-        //     }
-        //     return user;
-        // }
-        // [HttpPost]
-        // public async Task<ActionResult<User>> PostUser (User user)
-        // {
-        //     _userContext.Users.Add(user);
-        //     await _userContext.SaveChangesAsync();
+        [HttpGet("{id}")]
+        public async Task<ActionResult<User>> GetUser(long id)
+        {
+            User user = await _userService.GetById(id);
+            if(user == null)
+            {
+                return null; // TODO : Return NotFound
+            }
+            return user;
+        }
+        [HttpPost]
+        public async Task<ActionResult<User>> PostUser (User user)
+        {
+            return null;
+        }
 
-        //     return CreatedAtAction (nameof (GetUser), new { id = user.Id }, user);
-        // }
+        [HttpPut]
+        public async Task<ActionResult<User>> Update(User user)
+        {
+            User userUpdated =  await _userService.Update(user);
+            return Ok(userUpdated);
+        }
     }
 }

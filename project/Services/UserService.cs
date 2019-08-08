@@ -44,7 +44,7 @@ namespace DotnetCore.project.Services
             return await _userContext.Users.ToListAsync();
         }
 
-        public async Task<User> GetById(int id)
+        public async Task<User> GetById(long id)
         {
             return await _userContext.Users.FindAsync(id);
         }
@@ -70,7 +70,7 @@ namespace DotnetCore.project.Services
             return user;
         }
 
-        public void Update(User userParam, string password = null)
+        public async Task<User> Update(User userParam, string password = null)
         {
             var user = _userContext.Users.Find(userParam.Id);
 
@@ -100,7 +100,9 @@ namespace DotnetCore.project.Services
             }
 
             _userContext.Users.Update(user);
-            _userContext.SaveChanges();
+            await _userContext.SaveChangesAsync();
+
+            return user;
         }
 
         public void Delete(int id)
