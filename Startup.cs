@@ -90,6 +90,10 @@ namespace DotnetCoreApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            app.UseAuthentication();
+            app.UseMvc();
+            app.UseStaticFiles();
+            app.UseHttpsRedirection();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -111,10 +115,6 @@ namespace DotnetCoreApi
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "dotnetcore-api-core V1");
             });
-            app.UseAuthentication();
-            app.UseStaticFiles();
-            app.UseHttpsRedirection();
-            app.UseMvc();
         }
 
         public void ConfigureContext(IServiceCollection services)
