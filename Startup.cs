@@ -90,6 +90,8 @@ namespace DotnetCoreApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // Security JWT
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
             app.UseMvc();
             app.UseStaticFiles();
@@ -106,8 +108,6 @@ namespace DotnetCoreApi
 
             // Enable middleware to serve generated Swagger as a JSON endpoint.
             app.UseSwagger();
-            // Security JWT
-            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
             // specifying the Swagger JSON endpoint.

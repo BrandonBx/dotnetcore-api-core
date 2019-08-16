@@ -25,9 +25,9 @@ namespace DotnetCore.project.Controllers
             _userService = userService;   
             _mapper = mapper;
         }
-
+        
         [HttpGet]
-        public async  Task<ActionResult<IEnumerable<User>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
             IEnumerable<User> users = await _userService.GetAll();
             
