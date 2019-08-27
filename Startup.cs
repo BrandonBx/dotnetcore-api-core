@@ -7,7 +7,9 @@ using DotnetCore.project.Services;
 using DotnetCore.project.Services.Interfaces;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -30,7 +32,7 @@ namespace DotnetCoreApi
         public void ConfigureServices(IServiceCollection services)
         {
             ConfigureContext(services);
-            
+
             services.AddCors();
             services.AddAutoMapper(typeof(Startup));
 
@@ -93,7 +95,6 @@ namespace DotnetCoreApi
             // Security JWT
             app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
             app.UseAuthentication();
-            app.UseMvc();
             app.UseStaticFiles();
             app.UseHttpsRedirection();
             if (env.IsDevelopment())
@@ -115,8 +116,17 @@ namespace DotnetCoreApi
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "dotnetcore-api-core V1");
             });
+            app.UseStatusCodePages(async (StatusCodeContext context) =>
+            {
+                if (!context.HttpContext.Response.ContentLength.HasValue || context.HttpContext.Response.ContentLength == 0)
+                {
+                    // You can change ContentType as json serialize
+                    context.HttpContext.Response.ContentType = "application/json";
+                    await context.HttpContext.Response.WriteAsync($"Status Code: {context.HttpContext.Response.StatusCode}");
+                }
+            });
+            app.UseMvc();
         }
-
         public void ConfigureContext(IServiceCollection services)
         {
             // Database injection
